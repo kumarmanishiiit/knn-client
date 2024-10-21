@@ -2,11 +2,16 @@ package org.example;
 
 import com.assignment.knn.model.DataPointResponse;
 import com.assignment.knn.model.KNNResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class KnnClient {
+
+    private static final Logger log = LoggerFactory.getLogger(KnnClient.class);
+
 
     static GrpcClient client1;
 
@@ -19,13 +24,8 @@ public class KnnClient {
     static float query2;
 
     public static void main(String[] args) throws InterruptedException {
-//        Map<Float, Float> data = Map.of(0.12f, 34.0f, 42.0f, 1.24f, 5.0f, -78.4f, 21.72f, -18.76f, 61.45f, 74.9f);
-
-        // Now send these datasets to different servers
-//        sendDataToServers(data);
-        // Check if a port number was provided
         if (args.length < 1) {
-            System.out.println("Usage: java -jar MyServer.jar <port> <port>");
+            log.warn("Usage: java -jar MyServer.jar <port> <port>");
             System.exit(1);
         }
 
@@ -40,7 +40,7 @@ public class KnnClient {
             query2 = Float.parseFloat(args[4]);
 
         } catch (NumberFormatException e) {
-            System.out.println("Error: Port must be a number.");
+            log.warn("Error: Port must be a number.");
             System.exit(1);
         }
 
@@ -67,8 +67,7 @@ public class KnnClient {
         com.assignment.knn.model.KNNResponse knnResponse1 = client1.knnResponses;
         com.assignment.knn.model.KNNResponse knnResponse2 = client2.knnResponses;
 
-        List<com.assignment.knn.model.DataPointResponse> dataPointResponse = new ArrayList<>();
-        dataPointResponse.addAll(knnResponse1.getKDataPointList());
+        List<DataPointResponse> dataPointResponse = new ArrayList<>(knnResponse1.getKDataPointList());
         List<DataPointResponse> reponse1 = knnResponse2.getKDataPointList();
         if(reponse1 != null) {
             dataPointResponse.addAll(reponse1);
@@ -81,19 +80,20 @@ public class KnnClient {
         });
 
         for (com.assignment.knn.model.DataPointResponse pointResponse : dataPointResponse) {
-            maxHeap.add(pointResponse);  // Add each element to the heap
+            maxHeap.add(pointResponse);
             // If heap size exceeds k, remove the smallest element
             if (maxHeap.size() > k) {
-                maxHeap.poll();  // Removes the root (smallest element in the heap)
+                maxHeap.poll();
             }
         }
 
         long endTime = System.currentTimeMillis();
 
-        System.out.println("Latency: " + (endTime - startTime) + "ms");
+        log.info("Latency: is: {} ms", (endTime - startTime));
 
+        log.info("{} Nearest neighbour for {}, {} are: ", k, query1, query2);
         for (int i = 0; i < k; i++) {
-            System.out.println(Objects.requireNonNull(maxHeap.poll()).getDataPoint());
+            log.info(String.valueOf(Objects.requireNonNull(maxHeap.poll()).getDataPoint()));
         }
     }
 
