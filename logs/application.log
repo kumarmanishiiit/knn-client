@@ -1,0 +1,5 @@
+37504 [grpc-default-executor-1] ERROR org.example.GrpcClient - Error: UNAVAILABLE: io exception
+38886 [grpc-default-executor-1] ERROR org.example.GrpcClient - Error: UNAVAILABLE: io exception
+460  [grpc-default-executor-1] ERROR org.example.GrpcClient - Error: UNAVAILABLE: io exception
+1329 [grpc-default-executor-0] ERROR org.example.GrpcClient - Error: UNAVAILABLE: io exception
+2327 [main] WARN  org.example.KnnClient - KNN Response is null. Please try again!!!

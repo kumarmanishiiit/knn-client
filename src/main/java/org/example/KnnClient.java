@@ -67,6 +67,11 @@ public class KnnClient {
         com.assignment.knn.model.KNNResponse knnResponse1 = client1.knnResponses;
         com.assignment.knn.model.KNNResponse knnResponse2 = client2.knnResponses;
 
+
+        if(knnResponse1 == null || knnResponse2 == null) {
+            log.warn("KNN Response is null. Please try again!!!");
+            System.exit(1);
+        }
         List<DataPointResponse> dataPointResponse = new ArrayList<>(knnResponse1.getKDataPointList());
         List<DataPointResponse> reponse1 = knnResponse2.getKDataPointList();
         if(reponse1 != null) {
@@ -93,7 +98,9 @@ public class KnnClient {
 
         log.info("{} Nearest neighbour for {}, {} are: ", k, query1, query2);
         for (int i = 0; i < k; i++) {
-            log.info(String.valueOf(Objects.requireNonNull(maxHeap.poll()).getDataPoint()));
+            if(!maxHeap.isEmpty()) {
+                log.info(String.valueOf(Objects.requireNonNull(maxHeap.poll()).getDataPoint()));
+            }
         }
     }
 
