@@ -55,10 +55,12 @@ public class KnnClient {
 
         long startTime = System.currentTimeMillis();
 
+        // Number of server should be under latch.
+        // We are using this for holding the call until all the worker respond.
         CountDownLatch latch = new CountDownLatch(2);
 
-        client1.knnQuery(latch, query1, query2);
-        client2.knnQuery(latch, query1, query2);
+        client1.knnQuery(latch, query1, query2, k);
+        client2.knnQuery(latch, query1, query2, k);
 
         latch.await();
 
@@ -90,7 +92,7 @@ public class KnnClient {
 
         System.out.println("Latency: " + (endTime - startTime) + "ms");
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < k; i++) {
             System.out.println(Objects.requireNonNull(maxHeap.poll()).getDataPoint());
         }
     }

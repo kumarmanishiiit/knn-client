@@ -48,11 +48,11 @@ public class GrpcClient {
         Thread.sleep(1000);
     }
 
-    public void knnQuery(CountDownLatch latch, Float x_cord, Float y_cord) throws InterruptedException {
+    public void knnQuery(CountDownLatch latch, Float x_cord, Float y_cord, int k) throws InterruptedException {
 
         com.assignment.knn.model.DataPoint dataPoint = com.assignment.knn.model.DataPoint.newBuilder().setXCord(x_cord).setYCord(y_cord).build();
 
-        com.assignment.knn.model.KNNRequest request = com.assignment.knn.model.KNNRequest.newBuilder().setDataPoint(dataPoint).setK(2).build();
+        com.assignment.knn.model.KNNRequest request = com.assignment.knn.model.KNNRequest.newBuilder().setDataPoint(dataPoint).setK(k).build();
 
 
         knnServiceStub.findKNearestNeighbors(request, new StreamObserver<KNNResponse>() {
