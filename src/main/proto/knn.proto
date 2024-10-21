@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package knn;
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.assignment.knn.model";
+
+message KNNRequest {
+  //  data point
+  DataPoint data_point =1;
+  int32 k = 2;
+}
+
+message DataPoint {
+  float x_cord = 1;
+  float y_cord = 2;
+}
+
+message DataPointResponse {
+  float distance = 1;
+  DataPoint dataPoint = 2;
+}
+
+
+// Response message
+message KNNResponse {
+  repeated DataPointResponse k_data_point = 1;
+}
+
+message Output {
+  bool value = 1;
+}
+
+service KNNService {
+  // unary
+  rpc FindKNearestNeighbors(KNNRequest) returns (KNNResponse);
+  rpc PopulateData(DataPoint) returns (stream Output);
+}
+
